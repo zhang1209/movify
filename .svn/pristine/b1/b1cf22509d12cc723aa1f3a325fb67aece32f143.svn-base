@@ -1,0 +1,73 @@
+package com.movify.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import org.springframework.stereotype.Repository;
+
+import com.movify.dao.BaseDao;
+import com.movify.dao.IUserDao;
+
+import jdk.nashorn.internal.runtime.regexp.RegExp;
+@Repository
+public class UserDaoImpl extends BaseDao implements IUserDao{
+
+	@Override
+	public List<Map<String,Object>> isExists(String username, String password, int num) {
+		String sql = null;
+		if (num==1) {
+			sql = "select * from user where uemail = ? and upw = ?";
+		} else if (num==2) {
+			sql = "select * from user where uphone = ? and upw = ?";
+		}else if (num==3) {
+			sql = "select * from user where uname = ? and upw = ?";
+		}
+		Object[] ps = {username,password};
+		return executeQuery(sql,ps);
+	}
+
+	@Override
+	public boolean isExists(String uname) {
+		String sql = "select uname "
+				+ " from user"
+				+ " where uname = ?";
+		Object[] ps = {uname};
+		List<Map<String,Object>> list = executeQuery(sql,ps);
+		if (list.size()>0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int add(String uname, String upw, String helpcode) {
+		String sql = "insert into user"
+				+ " (uname,upw,helpcode)"
+				+ " values"
+				+ " (?,?,?)";
+		Object[] ps = {uname,upw,helpcode};
+		return executeUpdate(sql,ps);
+	}
+
+	@Override
+	public boolean forgetUpw(String username, String helpcode) {
+		String sql = "select uname,helpcode from user"
+				+ " where uname = ? and helpcode = ?";
+		Object[] ps = {username,helpcode};
+		List<Map<String,Object>> list = executeQuery(sql,ps);
+		if (list.size()>0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public int updUpw(String username, String upw) {
+		String sql = "update user set upw = ? where uname = ?";
+		Object[] ps = {username,upw};
+		return executeUpdate(sql,ps);
+	}
+
+	
+}

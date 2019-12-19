@@ -1,0 +1,117 @@
+package com.movify.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.movify.entity.User;
+import com.movify.service.IUserService;
+/**
+ * 前台登录控制器
+ * @author zhang
+ *
+ */
+@Controller
+public class LoginController {
+	
+	@Autowired
+	private IUserService ius ;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private HttpServletResponse response;
+	
+	
+	/**
+	 * 登录处理
+	 * @author zhang
+	 * @return
+	 */
+	@RequestMapping("/login")
+	@ResponseBody
+	public String loginUser() {
+		String uname = request.getParameter("username");
+		String upw = request.getParameter("password");
+		int num = Integer.valueOf(request.getParameter("num"));
+		User u = ius.isExists(uname, upw, num);
+		if (u!=null) {
+			HttpSession session = request.getSession();
+			session.setAttribute("user", u);
+			return "1";
+		}
+		return "2";
+	}
+	
+	
+	/**
+	 * 退出登录
+	 * @author zhang
+	 * @return
+	 */
+	@RequestMapping("/out_login")
+	public String out_login() {
+		HttpSession session = request.getSession();
+		session.removeAttribute("user");
+		return "redirect:/indexShow";
+	}
+	
+	
+	/**
+	 * 验证用户是否存在
+	 * @author zhang
+	 * @return
+	 */
+	@RequestMapping("/unameIsExists")
+	@ResponseBody
+	public String unameIsExists() {
+		String uname = request.getParameter("uname");
+		if (ius.isExists(uname)) {
+			return "2";
+		}
+		return "";
+	}
+	
+	
+	/**
+	 * 注册处理
+	 * @author zhang
+	 * @return
+	 */
+	@RequestMapping("/register")
+	@ResponseBody
+	public String register() {
+		String uname = request.getParameter("uname");
+		String upw = request.getParameter("upw");
+		// 设置一个6位随机数作为挽救码
+		String helpcode = Integer.valueOf((int)((Math.random()*9+1)*100000)).toString();
+		if (ius.register(uname, upw, helpcode)>0) {
+			return helpcode;
+		}
+		return "";
+	}
+	
+	
+	/**
+	 * 忘记密码处理
+	 * @author zhang
+	 * @return
+	 */
+	@RequestMapping("/forget_upw")
+	@ResponseBody
+	public String forget_upw() {
+		String username = request.getParameter("username");
+		String helpcode = request.getParameter("helpcode");
+		String upw = request.getParameter("upw");
+		
+		if (ius.forgetUpw(username, helpcode)) {
+			ius.updUpw(username, upw);
+			return "1";
+		}
+		return "";
+	}
+}

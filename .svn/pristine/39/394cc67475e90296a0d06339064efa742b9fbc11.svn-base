@@ -1,0 +1,28 @@
+package com.movify.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.movify.dao.IActorDao;
+import com.movify.service.IActorService;
+
+@Service
+public class ActorServiceImpl implements IActorService {
+	
+	@Autowired
+	private IActorDao iad;
+	@Override
+	public List<Map<String, Object>> getActor() {
+		// TODO Auto-generated method stub
+		return iad.getActor();
+	}
+	@Override
+	public List<Map<String, Object>> getActorDetails(int aid) {
+		// TODO Auto-generated method stub
+		return iad.getActorDetails(aid);
+	}
+
+}

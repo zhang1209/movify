@@ -1,0 +1,66 @@
+package com.movify.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.movify.dao.IVideoDao;
+import com.movify.dao.impl.VideoDaoImpl;
+import com.movify.service.IVideoService;
+
+@Service
+public class VideoServiceImpl implements IVideoService {
+	
+	@Autowired
+	IVideoDao ivd = new VideoDaoImpl();
+	
+	@Override
+	public List<Map<String, Object>> videoSearch(String key) {
+		
+		return ivd.searchVideo(key);
+	}
+	@Override
+	public List<Map<String, Object>> newVideo() {
+		// TODO Auto-generated method stub
+		return ivd.newVideo();
+	}
+	@Override
+	public List<Map<String, Object>> newUserVideo() {
+		// TODO Auto-generated method stub
+		return ivd.newUserVideo();
+	}
+	@Override
+	public List<Map<String, Object>> hotVideo() {
+		// TODO Auto-generated method stub
+		return ivd.hotVideo();
+	}
+	@Override
+	public List<Map<String, Object>> getDataCount() {
+		// TODO Auto-generated method stub
+		return ivd.getDataCount();
+	}
+	@Override
+	public List<Map<String, Object>> getVideoByType(int typeid) {
+		// TODO Auto-generated method stub
+		return ivd.getVideoByType(typeid);
+	}
+	@Override
+	public List<Map<String, Object>> getVideoById(int id) {
+		// TODO Auto-generated method stub
+		return ivd.getVideoById(id);
+	}
+	@Override
+	public List<Map<String, Object>> getVideoPhoto(int id) {
+		// TODO Auto-generated method stub
+		return ivd.getVideoPhoto(id);
+	}
+	@Override
+	public List<Map<String, Object>> getActor(int id) {
+		// TODO Auto-generated method stub
+		return ivd.getActor(id);
+	}
+
+
+}

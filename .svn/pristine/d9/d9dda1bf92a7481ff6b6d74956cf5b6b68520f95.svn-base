@@ -1,0 +1,152 @@
+package com.movify.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.movify.entity.User;
+import com.movify.service.IBlogService;
+import com.movify.service.IVideoService;
+
+/**
+ * 前台页面控制器（主页，视频）
+ * @author zhang
+ *
+ */
+@Controller
+public class IndexController{
+	
+	@Autowired
+	private IBlogService ibs;
+	@Autowired
+	private IVideoService ivs;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private HttpServletResponse response;
+	
+	/**
+	 * 显示主页，以及数据加载
+	 * @author zhang
+	 * @return
+	 */
+	@RequestMapping("/indexShow")
+	public ModelAndView indexShow() {
+		ModelAndView mad = new ModelAndView();
+		mad.addObject("newVideo", ivs.newVideo());
+		mad.addObject("newUserVideo", ivs.newUserVideo());
+		mad.addObject("hotVideo", ivs.hotVideo());
+		mad.addObject("dataCount", ivs.getDataCount());
+		mad.addObject("newBlog",ibs.newBlog());
+		mad.setViewName("qiantai/index");
+		
+		return mad;	
+	}
+	
+	/**
+	 * 根据关键字查出video_list
+	 * @author zhang
+	 */
+	@RequestMapping("/video_list")
+	public String video_list_moren() {
+		String typeid = request.getParameter("video_type");
+		if (typeid==null || "0".equals(typeid)) {
+			String key  = request.getParameter("key");
+			request.setAttribute("video_list", ivs.videoSearch(key));
+		} else {
+			int tid = Integer.valueOf(typeid);
+			request.setAttribute("typeid", tid);
+			request.setAttribute("video_list", ivs.getVideoByType(tid));
+		}
+		return "qiantai/video_list";
+	}
+	
+	/**
+	 * 视频播放
+	 * @author zhang
+	 */
+	@RequestMapping("/video_play")
+	public String video_play(String vid, String vtype, Model m) {
+		if ("1".equals(vtype) || "2".equals(vtype)){
+			HttpSession session = request.getSession();
+			if (session.getAttribute("user")!=null){
+				User u = (User) session.getAttribute("user");
+				if (u.getRole()<2){
+					return "qiantai/sorry";
+				} 
+			} else {
+				return "qiantai/sorry";
+			}
+		}
+		int id = Integer.valueOf(vid);
+		List<Map<String,Object>> list = ivs.getVideoById(id);
+		m.addAttribute("video_byid",list);
+		return "qiantai/videoplay";
+		
+	}
+	
+	/**
+	 * 视频详情页面
+	 * @author zhang
+	 */
+	@RequestMapping("/video_details")
+	public String video_details(String vid, String vtype, Model m){
+		int id = Integer.valueOf(vid);
+		int typeid = Integer.valueOf(vtype);
+		m.addAttribute("video_details",ivs.getVideoById(id));
+		m.addAttribute("other_video",ivs.getVideoByType(typeid));
+		m.addAttribute("video_photo",ivs.getVideoPhoto(id));
+		m.addAttribute("actor_list",ivs.getActor(id));
+		return "qiantai/video_details";
+	}
+	
+	/**
+	 * 稍后观看的处理
+	 * @author zhang
+	 */
+	@RequestMapping("/watch_later")
+	@ResponseBody
+	public String watchLater(String vid,String uid) {
+		if (uid==null || uid=="") {
+			// 如果没有登录状态，返回1
+			return "1";
+		}
+		if (ivs.queryWatchLater(Integer.valueOf(vid),Integer.valueOf(uid))) {
+			// 如果等于true，说明已经（加入稍后观看），返回2
+			return "2";
+		} else {
+			ivs.addWatchLater(Integer.valueOf(vid),Integer.valueOf(uid));
+			return "3";
+		}	
+	}
+	
+	@RequestMapping("/watch_later_show")
+	public String watch_later_show(String uid) {
+		List<Map<String,Object>> list = ivs.queryWatchLaterByUid(Integer.valueOf(uid));
+		request.setAttribute("watch_later",list );
+		return "qiantai/watch_later";
+	}
+	
+	@RequestMapping("/watch_later_del")
+	@ResponseBody
+	public String watch_later_del(String uid,String vid) {
+		if (ivs.watchLaterDel(Integer.valueOf(uid),Integer.valueOf(vid))>0) {
+			return "1";
+		}
+		return "";
+	}
+	
+	
+	
+
+}

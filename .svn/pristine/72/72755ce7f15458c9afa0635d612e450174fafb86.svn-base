@@ -1,0 +1,53 @@
+package com.movify.dao;
+
+import java.util.List;
+import java.util.Map;
+
+public interface IUserDao {
+	/**
+	 * 登录验证
+	 * @author zhang
+	 * @param username
+	 * @param password
+	 * @param num
+	 * @return
+	 */
+	List<Map<String,Object>> isExists(String username, String password,int num);
+	
+	/**
+	 * 验证用户存在性
+	 * @author zhang
+	 * @param uname
+	 * @return
+	 */
+	boolean isExists(String uname);
+	
+	/**
+	 * 新增用户
+	 * @author zhang
+	 * @param uname
+	 * @param upw
+	 * @param helpcode
+	 * @return
+	 */
+	int add(String uname, String upw, String helpcode);
+	
+	/**
+	 * 验证挽救码的正确性
+	 * @author zhang
+	 * @param username
+	 * @param helpcode
+	 * @return
+	 */
+	boolean forgetUpw(String username, String helpcode);
+	
+	/**
+	 * 修改密码
+	 * @author zhang
+	 * @param username
+	 * @param upw
+	 * @return
+	 */
+	int updUpw(String username, String upw);
+	
+}

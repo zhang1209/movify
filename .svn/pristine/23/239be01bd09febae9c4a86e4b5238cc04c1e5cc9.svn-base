@@ -1,0 +1,19 @@
+package com.movify.dao;
+
+import java.util.List;
+import java.util.Map;
+
+public interface IActorDao {
+	/**
+	 * 查询所有演员
+	 * @author zhang
+	 */
+	List<Map<String,Object>> getActor();
+	
+	/**
+	 * 根据id查询演员明细
+	 * @param aid
+	 * @return
+	 */
+	List<Map<String,Object>>getActorDetails(int aid);
+}

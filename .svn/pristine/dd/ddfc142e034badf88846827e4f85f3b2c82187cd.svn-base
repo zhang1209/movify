@@ -1,0 +1,74 @@
+package com.movify.dao;
+
+import java.util.List;
+import java.util.Map;
+
+public interface IVideoDao {
+	/**
+	 * 模糊查询视频表
+	 * @author zhang
+	 * @param key
+	 * @return
+	 */
+	List<Map<String,Object>> searchVideo(String key);
+	
+	/**
+	 * 查询最新的视频
+	 * @author zhang
+	 * @return
+	 */
+	List<Map<String,Object>> newVideo();
+	
+	/**
+	 * 查询最新的用户原创视频
+	 * @author zhang
+	 * @return
+	 */
+	List<Map<String,Object>> newUserVideo();
+	
+	/**
+	 * 查询最热门的视频
+	 * @author zhang
+	 * @return
+	 */
+	List<Map<String,Object>> hotVideo();
+	
+	/**
+	 * 查询视频数量，博客数量，用户数量
+	 * @author zhang
+	 * @return
+	 */
+	List<Map<String,Object>> getDataCount();
+	
+	/**
+	 * 根据类型（电影，连续剧，用户原创）查询视频
+	 * @author zhang
+	 * @param typeid
+	 * @return
+	 */
+	List<Map<String, Object>> getVideoByType(int typeid);
+	
+	/**
+	 * 获取单条视频记录根据id
+	 * @author zhang
+	 * @param id
+	 * @return
+	 */
+	List<Map<String, Object>> getVideoById(int id);
+	
+	/**
+	 * 查出视频精彩截图
+	 * @author zhang
+	 * @param id
+	 * @return
+	 */
+	List<Map<String, Object>> getVideoPhoto(int id);
+	
+	/**
+	 * 根据电影id查询演员
+	 * @author zhang
+	 * @param id
+	 * @return
+	 */
+	List<Map<String, Object>> getActor(int id);
+}

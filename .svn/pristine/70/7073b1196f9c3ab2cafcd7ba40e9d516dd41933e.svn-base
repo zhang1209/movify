@@ -1,0 +1,25 @@
+package com.movify.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.movify.dao.BaseDao;
+import com.movify.dao.IBlogDao;
+
+@Repository
+public class BlogDaoImpl extends BaseDao implements IBlogDao {
+
+	@Override
+	public List<Map<String, Object>> newBlog() {
+		String sql = "select u.uphoto,b.* "
+				+ " from blog b left join user u "
+				+ " on b.buser = u.uid "
+				+ " where b.bcheckstate = 2 and b.bstate = 1"
+				+ " order by b.bdate desc "
+				+ " limit 0,3";
+		return executeQuery(sql,null);
+	}
+
+}

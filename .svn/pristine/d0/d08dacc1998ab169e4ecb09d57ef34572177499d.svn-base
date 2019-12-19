@@ -1,0 +1,15 @@
+package com.movify.dao;
+
+import java.util.List;
+import java.util.Map;
+
+public interface IBlogDao {
+	/**
+	 * 最新博客
+	 * @author zhang
+	 * @return
+	 */
+	List<Map<String,Object>> newBlog();
+	
+	
+}

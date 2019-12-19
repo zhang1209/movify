@@ -1,0 +1,135 @@
+package com.movify.dao;
+
+import java.util.List;
+import java.util.Map;
+
+public interface IVideoDao {
+	/**
+	 * 模糊查询视频表
+	 * @author zhang
+	 * @param key
+	 * @return
+	 */
+	List<Map<String,Object>> searchVideo(String key);
+	
+	/**
+	 * 查询最新的视频
+	 * @author zhang
+	 * @return
+	 */
+	List<Map<String,Object>> newVideo();
+	
+	/**
+	 * 查询最新的用户原创视频
+	 * @author zhang
+	 * @return
+	 */
+	List<Map<String,Object>> newUserVideo();
+	
+	/**
+	 * 查询最热门的视频
+	 * @author zhang
+	 * @return
+	 */
+	List<Map<String,Object>> hotVideo();
+	
+	/**
+	 * 查询视频数量，博客数量，用户数量
+	 * @author zhang
+	 * @return
+	 */
+	List<Map<String,Object>> getDataCount();
+	
+	/**
+	 * 根据类型（电影，连续剧，用户原创）查询视频
+	 * @author zhang
+	 * @param typeid
+	 * @return
+	 */
+	List<Map<String, Object>> getVideoByType(int typeid);
+	
+	/**
+	 * 获取单条视频记录根据id
+	 * @author zhang
+	 * @param id
+	 * @return
+	 */
+	List<Map<String, Object>> getVideoById(int id);
+	
+	/**
+	 * 查出视频精彩截图
+	 * @author zhang
+	 * @param id
+	 * @return
+	 */
+	List<Map<String, Object>> getVideoPhoto(int id);
+	
+	/**
+	 * 根据电影id查询演员
+	 * @author zhang
+	 * @param id
+	 * @return
+	 */
+	List<Map<String, Object>> getActor(int id);
+	
+	/**
+	 * 查询登录的用户是否已经将此视频放入稍后观看
+	 * @author zhang
+	 * @param vid
+	 * @param uid
+	 * @return
+	 */
+	boolean queryWatchLater(int vid, int uid);
+	
+	/**
+	 * 添加watch_later数据
+	 * @author zhang
+	 */
+	int addWatchLater(int vid,int uid);
+	
+	/**
+	 * 根据用户id查询出来稍后观看
+	 * @author zhang
+	 * @param uid
+	 * @return
+	 */
+	List<Map<String, Object>> queryWatchLaterByUid(int uid);
+	
+	/**
+	 * 根据用户id，视频id删除稍后观看
+	 * @param uid
+	 * @param vid
+	 * @return
+	 */
+	int watchLaterDel(int uid, int vid);
+	
+	/**
+	 * 查询用户是否已经对视频点赞
+	 * @author zhang
+	 */
+	boolean queryVideo_likeById(int uid,int vid);
+	
+	/**
+	 * 增加视频点赞数根据视频id
+	 * @author zhang
+	 */
+	int addLike(int vid);
+	
+	/**
+	 * 增加用户视频点赞关联表数据
+	 * @author zhang
+	 */
+	int addVideo_Like(int uid,int vid);
+	
+	/**
+	 * 删除用户点赞关联表数据
+	 * @author zhang
+	 */
+	int delVideo_Like(int uid,int vid);
+	
+	/**
+	 * 对视频点赞数的修改
+	 * @author zhang
+	 */
+	int delLike(int vid);
+}

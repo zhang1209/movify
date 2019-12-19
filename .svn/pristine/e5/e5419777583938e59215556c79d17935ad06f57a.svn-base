@@ -1,0 +1,120 @@
+package com.movify.dao.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.movify.dao.BaseDao;
+import com.movify.dao.IVideoDao;
+
+@Repository
+public class VideoDaoImpl extends BaseDao implements IVideoDao {
+
+	@Override
+	public List<Map<String, Object>> searchVideo(String key) {
+		String sql = "select "
+				+ " v.vid,v.vposter,v.vrating,v.vname,v.vintroduce,"
+				+ " v.vcountry,v.vdirector,v.vstudio,v.vtype,"
+				+ " v.vcheckstate,v.vdate,	c.cname,l.lname,u.uname "
+				+ " from video v "
+				+ " left join user u on v.vuser = u.uid "
+				+ " left join category c on c.cid = v.vcategory"
+				+ " left join language l on v.vlanguage = l.lid "
+				+ " where v.vcheckstate=2 and v.vstate=1 and"
+				+ " concat(v.vname,v.vintroduce,v.vcountry,v.vdirector,v.vstudio,"
+				+ " v.vcheckstate,v.vdate,c.cname,l.lname,u.uname) like concat('%',?,'%')";
+		if (key==null) {
+			key="";
+		}
+		Object[] ps = {key};
+		return executeQuery(sql,ps);
+	}
+
+	@Override
+	public List<Map<String, Object>> newVideo() {
+		String sql = "select * from video"
+				+ " where vtype!=3 and vcheckstate=2 and vstate=1"
+				+ " order by vdate desc"
+				+ " limit 0,6 ";		
+		return executeQuery(sql,null);
+	}
+
+	@Override
+	public List<Map<String, Object>> newUserVideo() {
+		String sql = "select * from video"
+				+ " where vtype=3 and vcheckstate=2 and vstate=1"
+				+ " order by vdate desc"
+				+ " limit 0,3";
+		return executeQuery(sql,null);
+	}
+
+	@Override
+	public List<Map<String, Object>> hotVideo() {
+		String sql = "select * from video"
+				+ " where vcheckstate=2 and vstate=1"
+				+ " order by vlikecount desc"
+				+ " limit 0,5";
+		return executeQuery(sql,null);
+	}
+
+	@Override
+	public List<Map<String, Object>> getDataCount() {
+		String sql = "select count(*) as count from video union"
+				+ " select count(*) from blog union"
+				+ " select count(*) from user";
+		return executeQuery(sql,null);
+	}
+
+	@Override
+	public List<Map<String, Object>> getVideoByType(int typeid) {
+		String sql = "select "
+				+ " v.vid,v.vposter,v.vrating,v.vname,v.vintroduce,"
+				+ " v.vcountry,v.vdirector,v.vstudio,v.vtype,"
+				+ " v.vcheckstate,v.vdate,	c.cname,l.lname,u.uname "
+				+ " from video v "
+				+ " left join user u on v.vuser = u.uid "
+				+ " left join category c on c.cid = v.vcategory"
+				+ " left join language l on v.vlanguage = l.lid "
+				+ " where v.vcheckstate=2 and v.vstate=1 and"
+				+ " vtype=?";
+		Object[] ps = {typeid};
+		return executeQuery(sql,ps);
+	}
+
+	@Override
+	public List<Map<String, Object>> getVideoById(int id) {
+		String sql = "select * from "
+				+ " video v left join "
+				+ " category c on v.vcategory = c.cid "
+				+ " left join language l on l.lid=v.vlanguage "
+				+ " where vid = ?";
+		Object[] ps = {id};
+		return executeQuery(sql,ps);
+	}
+
+	@Override
+	public List<Map<String,Object>> getVideoPhoto(int id) {
+		String sql = "select vpname "
+				+ " from videophoto vp "
+				+ " left join video v "
+				+ " on v.vid=vp.video "
+				+ " where vid = ?";
+		Object[] ps = {id};
+		return executeQuery(sql,ps);
+	}
+
+	@Override
+	public List<Map<String, Object>> getActor(int id) {
+		String sql = "select a.* "
+				+ " from actor a "
+				+ " left join actor_history ah "
+				+ " on a.aid=ah.actor "
+				+ " left join video v "
+				+ " on ah.video = v.vid "
+				+ " where v.vid=?";
+		Object[] ps = {id};
+		return executeQuery(sql,ps);
+	}
+
+}

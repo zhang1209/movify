@@ -1,0 +1,51 @@
+package com.movify.service;
+
+import com.movify.entity.User;
+
+public interface IUserService {
+	/**
+	 * 用户登录
+	 * @author zhang
+	 * @param username
+	 * @param password
+	 * @param num
+	 * @return
+	 */
+	User isExists (String username, String password, int num);
+	
+	/**
+	 * 用户名存在验证
+	 * @author zhang
+	 * @param uname
+	 * @return
+	 */
+	boolean isExists(String uname);
+	
+	/**
+	 * 注册
+	 * @author zhang
+	 * @param uname
+	 * @param upw
+	 * @param helpcode
+	 * @return
+	 */
+	int register(String uname, String upw, String helpcode);
+	
+	/**
+	 * 挽救码验证
+	 * @author zhang
+	 * @param username
+	 * @param helpcode
+	 * @return
+	 */
+	boolean forgetUpw(String username, String helpcode);
+	
+	/**
+	 * 修改密码
+	 * @author zhang
+	 * @param username
+	 * @param upw
+	 * @return
+	 */
+	int updUpw(String username, String upw);
+}

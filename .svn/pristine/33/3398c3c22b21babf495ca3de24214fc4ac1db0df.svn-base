@@ -1,0 +1,58 @@
+package com.movify.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.movify.dao.IUserDao;
+import com.movify.dao.impl.UserDaoImpl;
+import com.movify.entity.User;
+import com.movify.service.IUserService;
+
+@Service
+public class UserServiceImpl implements IUserService{
+	@Autowired
+	private IUserDao iud;
+	@Override
+	public User isExists(String username, String password, int num) {
+		List<Map<String,Object>> list = iud.isExists(username, password,num);
+		if (list.size()>0) {
+			User u = new User();
+			for (Map<String,Object> map : list) {
+				u.setUid((Integer)map.get("uid"));
+				u.setUname((String)map.get("uname"));
+				u.setUphone((String)map.get("uphone"));
+				u.setUemail((String)map.get("uemail"));
+				u.setUpw((String)map.get("upw"));
+				u.setUphoto((String)map.get("uphoto"));
+				u.setHelpcode((String) map.get("helpcode"));
+				u.setRole((Integer) map.get("role"));
+				u.setState((Integer) map.get("state"));
+			}
+			return u;
+		}
+		return null;
+	}
+	@Override
+	public boolean isExists(String uname) {
+		return iud.isExists(uname);
+	}
+	@Override
+	public int register(String uname, String upw, String helpcode) {
+		// TODO Auto-generated method stub
+		return iud.add(uname,upw,helpcode);
+	}
+	@Override
+	public boolean forgetUpw(String username, String helpcode) {
+		// TODO Auto-generated method stub
+		return iud.forgetUpw(username,helpcode);
+	}
+	@Override
+	public int updUpw(String username, String upw) {
+		// TODO Auto-generated method stub
+		return iud.updUpw(username,upw);
+	}
+
+}
